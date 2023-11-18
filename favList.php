@@ -1,0 +1,13 @@
+favListInfo = {curPage:0, total:0, favCapacity:150, itemsPerPage:10, chIndex:-1, rowIdx:-1, curPageCount:-1};
+myFavChannelList = [];
+myFavChannelList.push(["1.FM Absolute Country Hits","****** Channel URL is maintained by Skytune",1,[[-1,-1,-1],[-1,-1]]]);
+myFavChannelList.push(["BBC World Service","http://stream.live.vc.bbcmedia.co.uk/bbc_world_service",0,[[3,17,-1],[2,64]]]);
+myFavChannelList.push(["Big 615","https://rfcm.streamguys1.com/big615-mp3",0,[[1,1,75],[2,24]]]);
+myFavChannelList.push(["Classical KING FM","****** Channel URL is maintained by Skytune",1,[[-1,-1,-1],[-1,-1]]]);
+myFavChannelList.push(["CNN","https://t1.streamguys1.com/secure-cnn?key=25276131567a2d7040a67c3f14472965d1079f3b5bdd395a865d3da799378228",0,[[1,1,43],[2,64]]]);
+myFavChannelList.push(["KBGE The bridge","https://ice41.securenetsystems.net/KBGE",0,[[1,1,70],[2,23]]]);
+myFavChannelList.push(["Radio Paradise 320k AAC","http://stream-dc1.radioparadise.com/aac-320",0,[[1,1,38],[2,23]]]);
+myFavChannelList.push(["Venice Classic Radio","****** Channel URL is maintained by Skytune",1,[[-1,-1,-1],[-1,-1]]]);
+myFavChannelList.push(["Venice Classic Radio (alternative stream)","****** Channel URL is maintained by Skytune",1,[[-1,-1,-1],[-1,-1]]]);
+myFavChannelList.push(["Venice Classic Radio * Auditorium","https://uk2.streamingpulse.com/ssl/vcr1",0,[[3,19,-1],[2,18]]]);
+favListInfo = {curPage:0, total:10, favCapacity:150, itemsPerPage:10, chIndex:-1, rowIdx:-1, curPageCount:10};
