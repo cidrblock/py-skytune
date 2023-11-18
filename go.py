@@ -11,10 +11,10 @@ radio = Radio(ip_address="192.168.1.11")
 
 favs = radio.favorites
 for fav in favs:
-    print(fav.name, fav.location, fav.genre, fav.url)
+    print(fav.uid, fav.name, fav.location, fav.genre, fav.url)
 
-# capacity = radio.favorites_capacity
-# print(capacity)
+capacity = radio.favorites_capacity
+print(capacity)
 
 locations = radio.locations
 for region in locations.regions:
@@ -33,4 +33,4 @@ fav = radio.add_channel(
     "United States",
     "Old Time Radio",
 )
-print(fav.name, fav.location, fav.genre, fav.url)
+print(fav.uid, fav.name, fav.location, fav.genre, fav.url)

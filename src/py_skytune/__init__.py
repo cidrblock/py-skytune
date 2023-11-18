@@ -71,6 +71,7 @@ class Favorite:
     skytune_maintained: bool
     location: str
     genre: str
+    uid: int = None
 
 
 @dataclass
@@ -215,6 +216,8 @@ class Radio:
             res = self.get(url="php/favList.php", params=params)
             favorites, _ = self._parse_favorite_page(res.text)
             self._favorites.extend(favorites)
+        for idx, favorite in enumerate(self._favorites):
+            favorite.uid = idx + 1
         return
 
     @property
