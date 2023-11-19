@@ -29,7 +29,6 @@ capacity = radio.favorites_capacity
 print(capacity)
 
 print(f"\nLocations{'-'*50}")
-
 locations = radio.locations
 for region in locations.regions:
     for country in region.countries:
