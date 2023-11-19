@@ -5,7 +5,7 @@ import logging
 from py_skytune.radio import Radio
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("urllib3").setLevel(logging.INFO)
 logging.getLogger("charset_normalizer").setLevel(logging.INFO)
 
@@ -37,10 +37,21 @@ for genre in genres.genres:
         print(subgenre)
 
 print(f"\nAdd channel{'-'*50}")
-fav = radio.add_channel(
-    "Radio 1 Rock",
-    "http://stream.radioreklama.bg:80/radio1rock128",
-    "United States",
-    "Old Time Radio",
+fav = radio.add_favorite(
+    "KEXP",
+    "https://kexp.streamguys1.com/kexp160.aac",
+    "Washington",
+    "Pop",
 )
 print(fav.uid, fav.name, fav.location, fav.genre, fav.url)
+
+playing = radio.play_favorite(fav.uid)
+print(playing)
+
+updated_stations = radio.delete_favorite(fav.uid)
+for fav in favs:
+    print(fav.uid, fav.name, fav.location, fav.genre, fav.url)
+
+sorted_favorites = radio.sort_favorites(reverse=False)
+for fav in sorted_favorites:
+    print(fav.uid, fav.name, fav.location, fav.genre, fav.url)

@@ -37,6 +37,7 @@ RE_CHANNEL = re.compile(
     re.VERBOSE,
 )
 
+
 @dataclass
 class FavDetails:
     """The FavDetails class."""
@@ -64,4 +65,4 @@ class Favorite:
     skytune_maintained: bool
     location: str
     genre: str
-    uid: int = None
+    uid: int = -1

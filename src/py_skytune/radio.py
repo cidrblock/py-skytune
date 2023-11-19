@@ -27,8 +27,8 @@ class Radio:
         self.ip_address = ip_address
         self.session = requests.Session()
         self.base_url = f"http://{self.ip_address}/"
-        self._favorites: list[Favorite] = None
-        self._countries: dict[tuple[int, int, int], str] = None
+        self._favorites: list[Favorite] | None = None
+        self._countries: dict[tuple[int, int, int], str] | None = None
         self._genres: Genres = Genres(genres=[])
         self._locations: Locations = Locations(regions=[])
 
@@ -37,9 +37,9 @@ class Radio:
         res = self.session.get(f"{self.base_url}{url}", params=params)
         return res
 
-    def _post(self: Radio, url: str, data: dict) -> requests.Response:
+    def _post(self: Radio, url: str, data: dict, params: dict) -> requests.Response:
         """Post the URL."""
-        return self.session.post(f"{self.base_url}{url}", data=data)
+        return self.session.post(f"{self.base_url}{url}", data=data, params=params)
 
     def _parse_favorite_page(self: Radio, page: str) -> tuple[list[Favorite], FavDetails]:
         """Parse the favorite page."""
@@ -48,25 +48,42 @@ class Radio:
         lines = lines[1:-1]
         fav_list_line = next(line for line in lines if line.startswith("favListInfo = "))
         match = RE_FAV.match(fav_list_line)
+        if not match:
+            err = f"Could not parse favListInfo: {fav_list_line}"
+            raise ValueError(err)
         fav_details = FavDetails(**{k: int(v) for k, v in match.groupdict().items()})
         favorites = []
         for line in lines:
             if line.startswith("myFavChannelList.push"):
                 match = RE_CHANNEL.match(line)
+                if not match:
+                    err = f"Could not parse myFavChannelList: {line}"
+                    raise ValueError(err)
                 favorite = match.groupdict()
-                location = tuple(int(x) for x in favorite["location"].split(","))
+                l1, l2, l3 = tuple(int(x) for x in favorite["location"].split(",", maxsplit=2))
+                location = (l1, l2, l3)
                 if location == (-1, -1, -1):
                     favorite["location"] = "Unknown"
                 else:
                     favorite["location"] = self.locations.find_by_uid(location)
-                genre = tuple(int(x) for x in favorite["genre"].split(","))
+
+                g1, g2 = tuple(int(x) for x in favorite["genre"].split(",", maxsplit=1))
+                genre = (g1, g2)
                 if genre == (-1, -1):
                     favorite["genre"] = "Unknown"
                 else:
                     favorite["genre"] = self.genres.find_by_uid(genre)
-                favorite["skytune_maintained"] = bool(int(favorite["skytune_maintained"]))
+                skytune_maintained = bool(int(favorite["skytune_maintained"]))
 
-                favorites.append(Favorite(**favorite))
+                favorites.append(
+                    Favorite(
+                        name=favorite["name"],
+                        url=favorite["url"],
+                        skytune_maintained=skytune_maintained,
+                        location=favorite["location"],
+                        genre=favorite["genre"],
+                    )
+                )
         return favorites, fav_details
 
     def _get_favorites(self: Radio) -> None:
@@ -74,7 +91,6 @@ class Radio:
         params = {"PG": 0, "EX": 0}
         logger.debug("Getting favorites: page %s", "0")
         res = self._get(url="php/favList.php", params=params)
-        logger.debug("page: %s", res.text)
         favorites, fav_details = self._parse_favorite_page(res.text)
         self._favorites = favorites
         if len(self._favorites) >= fav_details.total:
@@ -112,6 +128,9 @@ class Radio:
                 self._locations.regions[-1].countries.append(current_country)
             elif location[3] != -1:
                 logger.debug("Found state/province: %s", location[4])
+                if current_country is None:
+                    msg = f"Found state/province without country: {location}"
+                    raise ValueError(msg)
                 sp = StateProvince(
                     country=current_country,
                     name=location[4],
@@ -124,17 +143,28 @@ class Radio:
                 raise ValueError(msg)
 
     def _load_genres(self: Radio, genres_str: str) -> None:
-        """Get the genres."""
+        """Get the genres.
+
+        Args:
+            genres_str: The genres string.
+        """
         genres_loaded = json.loads(genres_str)
         for genre in genres_loaded:
             if genre[1] == -1:
                 logger.debug("Found genre: %s", genre[2])
-                self._genres.genres.append(Genre(name=genre[2], uid=tuple(genre[0:2]), subgenres=[]))
+                self._genres.genres.append(
+                    Genre(name=genre[2], uid=tuple(genre[0:2]), subgenres=[])
+                )
             elif genre[1] != -1:
                 logger.debug("Found subgenre: %s", genre[2])
                 parent_genre = self._genres.find_by_uid((genre[0], -1))
+                if isinstance(parent_genre, SubGenre):
+                    msg = f"Found subgenre with subgenre parent: {genre}"
+                    raise ValueError(msg)
                 subgenre = SubGenre(
-                    genre=parent_genre, name=genre[2], uid=tuple(genre[0:2]),
+                    genre=parent_genre,
+                    name=genre[2],
+                    uid=tuple(genre[0:2]),
                 )
                 parent_genre.subgenres.append(subgenre)
             else:
@@ -150,9 +180,18 @@ class Radio:
         self._load_locations(parts[0])
         self._load_genres(parts[1])
 
+    def add_favorite(self: Radio, name: str, url: str, location: str, genre: str) -> Favorite:
+        """Add a channel.
 
-    def add_channel(self: Radio, name: str, url: str, location: str, genre: str) -> None:
-        """Add a channel."""
+        Args:
+            name: The name of the channel.
+            url: The URL of the channel.
+            location: The location of the channel.
+            genre: The genre of the channel.
+
+        Returns:
+            The new or updated favorite.
+        """
         if not self._locations.regions:
             self._load_locations_genres()
         _location = self.locations.find_by_name(location)
@@ -164,22 +203,85 @@ class Radio:
             "chCountry": f"{_location.uid[0]};{_location.uid[1]};{_location.uid[2]}",
             "chGenre": f"{_genre.uid[0]};{_genre.uid[1]}",
         }
-        _res = self._post("addCh.cgi", data)
+        _res = self._post(url="addCh.cgi", data=data, params={})
         self._favorites = None
         favorites = self.favorites
         return next(fav for fav in favorites if fav.name == name and fav.url == url)
 
+    def delete_favorite(self: Radio, favorite_id: int) -> list[Favorite]:
+        """Delete a channel.
+
+        Args:
+            favorite_id: The favorite to delete.
+        """
+        data = {"CI": favorite_id - 1}
+        _res = self._get(url="delCh.cgi", params=data)
+        self._favorites = None
+        return self.favorites
+
+    def play_favorite(self: Radio, favorite_id: int) -> Favorite:
+        """Play a favorite.
+
+        Args:
+            favorite: The favorite to play.
+        """
+        data = {"AI": 16, "CI": favorite_id - 1}
+        _res = self._get(url="doApi.cgi", params=data)
+        return self.playing
+
+    def sort_favorites(self: Radio, reverse: bool = False) -> list[Favorite]:
+        """Sort the favorites.
+
+        Args:
+            favorites: The favorites to sort.
+        """
+        idx = 0
+        if self._favorites is None:
+            self._get_favorites()
+        if self._favorites is None:
+            msg = "Could not get favorites"
+            raise ValueError(msg)
+        sorted_favorites = sorted(self.favorites, key=lambda fav: fav.name.lower())
+        if reverse:
+            sorted_favorites.reverse()
+        while idx < len(self.favorites):
+            process = sorted_favorites[idx]
+            current_idx = self.favorites.index(process)
+            current = self.favorites[current_idx]
+            if idx == current_idx:
+                logger.debug("Skipping %s %s == %s", current.name, idx, current_idx)
+                idx += 1
+                continue
+            logger.debug("Moving %s to %s from %s", current.name, idx, current_idx)
+            params = {"CI": current_idx, "DI": idx, "EX": 0}
+            self._post(url="moveCh.cgi", data={}, params=params)
+            self._favorites.insert(idx, self._favorites.pop(current_idx))
+            idx += 1
+        self._favorites = None
+        return self.favorites
+
     @property
     def favorites(self: Radio) -> list[Favorite]:
-        """Get the favorites."""
+        """Get the favorites.
+
+        Returns:
+            The favorites.
+        """
         if self._favorites is not None:
             return self._favorites
         self._get_favorites()
+        if self._favorites is None:
+            msg = "Could not get favorites"
+            raise ValueError(msg)
         return self._favorites
 
     @property
     def favorites_capacity(self: Radio) -> dict[str, int]:
-        """Get the favorites capacity."""
+        """Get the favorites capacity.
+
+        Returns:
+            The favorites capacity.
+        """
         data = {"PG": 0, "EX": 0}
         logger.debug("Getting favorites: page %s", "0")
         res = self._get("php/favList.php", data)
@@ -187,17 +289,27 @@ class Radio:
         return fav_details.capacity_dict
 
     @property
-    def genres(self: Radio) -> dict[tuple[int, int], str]:
-        """Get the genres."""
+    def genres(self: Radio) -> Genres:
+        """Get the genres.
+
+        Returns:
+            The genres.
+        """
         if self._genres is not None:
             return self._genres
         self._load_locations_genres()
         return self._genres
 
     @property
-    def locations(self: Radio) -> dict[tuple[int, int, int], str]:
+    def locations(self: Radio) -> Locations:
         """Get the countries."""
         if self._locations.regions:
             return self._locations
         self._load_locations_genres()
         return self._locations
+
+    @property
+    def playing(self: Radio) -> Favorite:
+        """Get the currently playing favorite."""
+        res = self._get(url="php/playing.php", params={})
+        return res.json()
