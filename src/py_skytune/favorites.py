@@ -66,3 +66,13 @@ class Favorite:
     location: str
     genre: str
     uid: int = -1
+
+    def json(self: Favorite) -> dict[str, str]:
+        """Get the JSON representation."""
+        return {
+            "name": self.name,
+            "url": self.url,
+            "skytune_maintained": self.skytune_maintained,
+            "location": self.location,
+            "genre": self.genre,
+        }

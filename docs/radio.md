@@ -33,7 +33,11 @@ Initialize the Radio class.
 #### add\_favorite
 
 ```python
-def add_favorite(name: str, url: str, location: str, genre: str) -> Favorite
+def add_favorite(name: str,
+                 url: str,
+                 location: str,
+                 genre: str,
+                 refresh: bool = True) -> Favorite | None
 ```
 
 Add a channel.
@@ -44,6 +48,28 @@ Add a channel.
 - `url` - The URL of the channel.
 - `location` - The location of the channel.
 - `genre` - The genre of the channel.
+- `refresh` - Whether to refresh the favorites.
+  
+  
+
+**Returns**:
+
+  The new or updated favorite.
+
+<a id="py_skytune.radio.Radio.add_by_rb_uuid"></a>
+
+#### add\_by\_rb\_uuid
+
+```python
+def add_by_rb_uuid(rb_uuid: str, refresh: bool = True) -> Favorite
+```
+
+Add a channel from radio browser by uuid.
+
+**Arguments**:
+
+- `rb_uuid` - The uuid of the channel.
+- `refresh` - Whether to refresh the favorites.
   
 
 **Returns**:
@@ -55,7 +81,7 @@ Add a channel.
 #### delete\_favorite
 
 ```python
-def delete_favorite(favorite_id: int) -> list[Favorite]
+def delete_favorite(favorite_id: int, refresh: bool = True) -> list[Favorite]
 ```
 
 Delete a channel.
@@ -63,6 +89,42 @@ Delete a channel.
 **Arguments**:
 
 - `favorite_id` - The favorite to delete.
+
+<a id="py_skytune.radio.Radio.delete_all_favorites"></a>
+
+#### delete\_all\_favorites
+
+```python
+def delete_all_favorites() -> list[Favorite]
+```
+
+Delete all channels.
+
+<a id="py_skytune.radio.Radio.export_favorites"></a>
+
+#### export\_favorites
+
+```python
+def export_favorites(serialization: str = "json") -> str
+```
+
+Export favorites.
+
+<a id="py_skytune.radio.Radio.import_favorites"></a>
+
+#### import\_favorites
+
+```python
+def import_favorites(favorites_file: str) -> list[Favorite]
+```
+
+Import favorites.
+
+**Arguments**:
+
+- `favorites_file` - The file to import.
+  
+- `Returns` - The favorites.
 
 <a id="py_skytune.radio.Radio.play_favorite"></a>
 

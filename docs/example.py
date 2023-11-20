@@ -2,6 +2,8 @@
 
 import logging
 
+from pathlib import Path
+
 from py_skytune.radio import Radio
 
 
@@ -10,7 +12,7 @@ logging.getLogger("urllib3").setLevel(logging.INFO)
 logging.getLogger("charset_normalizer").setLevel(logging.INFO)
 
 
-radio = Radio(ip_address="192.168.1.9")
+radio = Radio(ip_address="192.168.1.11")
 
 favs = radio.favorites
 print(f"\nFavorites{'-'*50}")

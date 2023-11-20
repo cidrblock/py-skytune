@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
 
+from pathlib import Path
+
 import requests
 
+from pyradios import RadioBrowser
+
+from .data import US_STATES, COUNTRY_MAP
 from .favorites import RE_CHANNEL, RE_FAV, FavDetails, Favorite
 from .genre import Genre, Genres, SubGenre
 from .locations import Country, Locations, Region, StateProvince
@@ -31,6 +37,7 @@ class Radio:
         self._countries: dict[tuple[int, int, int], str] | None = None
         self._genres: Genres = Genres(genres=[])
         self._locations: Locations = Locations(regions=[])
+        self._rb: RadioBrowser | None = None
 
     def _get(self: Radio, url: str, params: dict) -> requests.Response:
         """Get the URL."""
@@ -43,6 +50,7 @@ class Radio:
 
     def _parse_favorite_page(self: Radio, page: str) -> tuple[list[Favorite], FavDetails]:
         """Parse the favorite page."""
+        # pylint: disable=too-many-locals
         lines = page.split("\n")
         # remove initial favListInfo
         lines = lines[1:-1]
@@ -62,17 +70,14 @@ class Radio:
                 favorite = match.groupdict()
                 l1, l2, l3 = tuple(int(x) for x in favorite["location"].split(",", maxsplit=2))
                 location = (l1, l2, l3)
-                if location == (-1, -1, -1):
-                    favorite["location"] = "Unknown"
-                else:
-                    favorite["location"] = self.locations.find_by_uid(location)
-
+                location_str = (
+                    "Unknown"
+                    if location == (-1, -1, -1)
+                    else self.locations.find_by_uid(location).name
+                )
                 g1, g2 = tuple(int(x) for x in favorite["genre"].split(",", maxsplit=1))
                 genre = (g1, g2)
-                if genre == (-1, -1):
-                    favorite["genre"] = "Unknown"
-                else:
-                    favorite["genre"] = self.genres.find_by_uid(genre)
+                genre_str = "Unknown" if genre == (-1, -1) else self.genres.find_by_uid(genre).name
                 skytune_maintained = bool(int(favorite["skytune_maintained"]))
 
                 favorites.append(
@@ -80,9 +85,9 @@ class Radio:
                         name=favorite["name"],
                         url=favorite["url"],
                         skytune_maintained=skytune_maintained,
-                        location=favorite["location"],
-                        genre=favorite["genre"],
-                    )
+                        location=location_str,
+                        genre=genre_str,
+                    ),
                 )
         return favorites, fav_details
 
@@ -94,6 +99,8 @@ class Radio:
         favorites, fav_details = self._parse_favorite_page(res.text)
         self._favorites = favorites
         if len(self._favorites) >= fav_details.total:
+            for idx, favorite in enumerate(self._favorites):
+                favorite.uid = idx + 1
             return
         total_pages = int(fav_details.total // fav_details.items_per_page)
         for page in range(1, total_pages + 1):
@@ -180,7 +187,14 @@ class Radio:
         self._load_locations(parts[0])
         self._load_genres(parts[1])
 
-    def add_favorite(self: Radio, name: str, url: str, location: str, genre: str) -> Favorite:
+    def add_favorite(  # noqa: PLR0913
+        self: Radio,
+        name: str,
+        url: str,
+        location: str,
+        genre: str,
+        refresh: bool = True,
+    ) -> Favorite | None:
         """Add a channel.
 
         Args:
@@ -188,6 +202,8 @@ class Radio:
             url: The URL of the channel.
             location: The location of the channel.
             genre: The genre of the channel.
+            refresh: Whether to refresh the favorites.
+
 
         Returns:
             The new or updated favorite.
@@ -204,11 +220,80 @@ class Radio:
             "chGenre": f"{_genre.uid[0]};{_genre.uid[1]}",
         }
         _res = self._post(url="addCh.cgi", data=data, params={})
-        self._favorites = None
-        favorites = self.favorites
-        return next(fav for fav in favorites if fav.name == name and fav.url == url)
+        if refresh:
+            self._favorites = None
+            favorites = self.favorites
+            return next(fav for fav in favorites if fav.name == name and fav.url == url)
+        return None
 
-    def delete_favorite(self: Radio, favorite_id: int) -> list[Favorite]:
+    def add_by_rb_uuid(self: Radio, rb_uuid: str, refresh: bool = True) -> Favorite:
+        """Add a channel from radio browser by uuid.
+
+        Args:
+            rb_uuid: The uuid of the channel.
+            refresh: Whether to refresh the favorites.
+
+        Returns:
+            The new or updated favorite.
+        """
+        if self._rb is None:
+            self._rb = RadioBrowser()
+        station = self._rb.station_by_uuid(stationuuid=rb_uuid)[0]
+        location = None
+        if station["state"]:
+            try:
+                state = next(
+                    (
+                        name
+                        for name, abbr in US_STATES.items()
+                        if station["state"].lower() == abbr.lower()
+                    ),
+                    None,
+                )
+                location = self.locations.find_by_name(state)
+            except ValueError:
+                try:
+                    state = next(
+                    (
+                        name
+                        for name, abbr in US_STATES.items()
+                        if station["state"].split()[1].lower() == abbr.lower()
+                    ),
+                    None,
+                )
+                    location = self.locations.find_by_name(state)
+                except (ValueError, IndexError):
+                    with contextlib.suppress(ValueError):
+                        location = self.locations.find_by_name(station["state"])
+        if not location:
+            if station["state"]:
+                logger.error("Could not find state: %s", station["state"])
+            try:
+                country = next(
+                    (
+                        alt
+                        for name, alt in COUNTRY_MAP.items()
+                        if station["country"].lower() == name.lower()
+                    ),
+                    None,
+                )
+                location = self.locations.find_by_name(country)
+            except ValueError:
+                with contextlib.suppress(ValueError):
+                    location = self.locations.find_by_name(station["country"])
+        if not location:
+            logger.error("Could not find country: %s", station["country"])
+            location = self.locations.find_by_name("United States")
+        genre = self.genres.find_by_name("Various")
+        return self.add_favorite(
+            name=station["name"],
+            url=station["url_resolved"],
+            location=location.name,
+            genre=genre.name,
+            refresh=True,
+        )
+
+    def delete_favorite(self: Radio, favorite_id: int, refresh: bool = True) -> list[Favorite]:
         """Delete a channel.
 
         Args:
@@ -216,6 +301,46 @@ class Radio:
         """
         data = {"CI": favorite_id - 1}
         _res = self._get(url="delCh.cgi", params=data)
+        if refresh:
+            self._favorites = None
+        return self.favorites
+
+    def delete_all_favorites(self: Radio) -> list[Favorite]:
+        """Delete all channels."""
+        for fav in reversed(self.favorites):
+            self.delete_favorite(fav.uid, refresh=False)
+        self._favorites = None
+        return self.favorites
+
+    def export_favorites(self: Radio, serialization: str = "json") -> str:
+        """Export favorites."""
+        if serialization != "json":
+            msg = f"Unsupported format: {format}"
+            raise RuntimeError(msg)
+        favorites = [fav.json() for fav in self.favorites]
+        return json.dumps(favorites, indent=4)
+
+    def import_favorites(self: Radio, favorites_file: str) -> list[Favorite]:
+        """Import favorites.
+
+        Args:
+            favorites_file: The file to import.
+
+        Returns: The favorites.
+        """
+        file = Path(favorites_file)
+        if not file.exists():
+            msg = f"File does not exist: {favorites_file}"
+            raise RuntimeError(msg)
+        with file.open(encoding="utf-8") as f:
+            favorites = json.load(f)
+        for fav in favorites:
+            if fav["skytune_maintained"]:
+                logger.error("Skipping skytune maintained favorite: %s", fav["name"])
+                continue
+            fav.pop("skytune_maintained")
+            logger.debug("Adding favorite: %s", fav)
+            self.add_favorite(**fav, refresh=False)
         self._favorites = None
         return self.favorites
 

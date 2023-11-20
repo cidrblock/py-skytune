@@ -37,3 +37,13 @@ class Favorite()
 
 The Favorite class.
 
+<a id="py_skytune.favorites.Favorite.json"></a>
+
+#### json
+
+```python
+def json() -> dict[str, str]
+```
+
+Get the JSON representation.
+

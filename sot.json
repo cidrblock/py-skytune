@@ -1,0 +1,72 @@
+[
+    {
+        "name": "1.FM - Absolute Country Hits Radio",
+        "url": "http://strm112.1.fm/acountry_mobile_mp3",
+        "skytune_maintained": false,
+        "location": "Switzerland",
+        "genre": "Various"
+    },
+    {
+        "name": "1.FM Always Christmas",
+        "url": "https://strm112.1.fm/christmas_mobile_mp3",
+        "skytune_maintained": false,
+        "location": "Switzerland",
+        "genre": "Holiday & Seasonal"
+    },
+    {
+        "name": "BBC World Service",
+        "url": "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
+        "skytune_maintained": false,
+        "location": "United Kingdom",
+        "genre": "Various"
+    },
+    {
+        "name": "Classical KING FM",
+        "url": "https://classicalking.streamguys1.com/king-fm-aac-128k",
+        "skytune_maintained": false,
+        "location": "United States",
+        "genre": "Various"
+    },
+    {
+        "name": "KUOW Seattle",
+        "url": "https://25093.live.streamtheworld.com:443/KUOWFM_HIGH_MP3.mp3?ck=1586884589483",
+        "skytune_maintained": false,
+        "location": "Washington",
+        "genre": "Various"
+    },
+    {
+        "name": "Radio Paradise (320k)",
+        "url": "http://stream-uk1.radioparadise.com/aac-320",
+        "skytune_maintained": false,
+        "location": "California",
+        "genre": "Various"
+    },
+    {
+        "name": "The BIG 615 Country Radio",
+        "url": "https://rfcm.streamguys1.com/big615-mp3",
+        "skytune_maintained": false,
+        "location": "Tennessee",
+        "genre": "Various"
+    },
+    {
+        "name": "Venice Classic Radio Auditorium",
+        "url": "https://uk2.streamingpulse.com/ssl/vcr2",
+        "skytune_maintained": false,
+        "location": "Italy",
+        "genre": "Various"
+    },
+    {
+        "name": "WALM - Old Time Radio",
+        "url": "https://icecast.walmradio.com:8443/otr",
+        "skytune_maintained": false,
+        "location": "New York",
+        "genre": "Various"
+    },
+    {
+        "name": "WALM Christmas Vinyl",
+        "url": "http://icecast.walmradio.com:8000/christmas",
+        "skytune_maintained": false,
+        "location": "New York",
+        "genre": "Holiday & Seasonal"
+    }
+]
