@@ -41,7 +41,11 @@ class Radio:
 
     def _get(self: Radio, url: str, params: dict) -> requests.Response:
         """Get the URL."""
-        res = self.session.get(f"{self.base_url}{url}", params=params)
+        try:
+            res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+        except requests.exceptions.ReadTimeout:
+            logger.exception("Timeout getting %s, retrying", url)
+            res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
         return res
 
     def _post(self: Radio, url: str, data: dict, params: dict) -> requests.Response:
@@ -222,8 +226,12 @@ class Radio:
         _res = self._post(url="addCh.cgi", data=data, params={})
         if refresh:
             self._favorites = None
-            favorites = self.favorites
-            return next(fav for fav in favorites if fav.name == name and fav.url == url)
+            try:
+                return next(fav for fav in self.favorites if fav.name == name and fav.url == url)
+            except StopIteration:
+                logger.exception("Could not find favorite: %s %s", name, url)
+                logger.exception("Favorites: %s", self.favorites)
+                return None
         return None
 
     def add_by_rb_uuid(self: Radio, rb_uuid: str, refresh: bool = True) -> Favorite:

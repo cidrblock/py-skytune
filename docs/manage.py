@@ -7,7 +7,9 @@ from py_skytune.radio import Radio
 
 logging.basicConfig(level=logging.DEBUG)
 
-radio = Radio(ip_address="192.168.1.11")
+radio = Radio(ip_address="192.168.1.9")
+
+radio.delete_all_favorites()
 
 stations = [
     "4517523d-6fb7-4e1b-9b1a-22fcae079099",  # venice
@@ -18,6 +20,8 @@ stations = [
     "9617a958-0601-11e8-ae97-52543be04c81",  # Radio paradise
     "962a63f2-0601-11e8-ae97-52543be04c81",  # 1.fm country
     "313046e3-b203-4b9d-bc3e-393da7d97126",  # WALM
+    "964b2829-0601-11e8-ae97-52543be04c81",  # Sona FM Groove Salad
+    "19823255-193f-11ea-a620-52543be04c81",  # Soma FM Jolly Ol' Soul
 ]
 
 for station in stations:
@@ -38,6 +42,12 @@ radio.add_favorite(
     genre="Holiday & Seasonal",
 )
 
+radio.add_favorite(
+    name= "SonaFM Folk Forward",
+    url = "https://somafm.com/nossl/folkfwd130.pls",
+    location="California",
+    genre="Various",
+)
 
 radio.sort_favorites()
 

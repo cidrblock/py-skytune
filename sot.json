@@ -28,6 +28,13 @@
         "genre": "Various"
     },
     {
+        "name": "Jolly Ol' Soul",
+        "url": "https://ice5.somafm.com/jollysoul-128-aac",
+        "skytune_maintained": false,
+        "location": "California",
+        "genre": "Various"
+    },
+    {
         "name": "KUOW Seattle",
         "url": "https://25093.live.streamtheworld.com:443/KUOWFM_HIGH_MP3.mp3?ck=1586884589483",
         "skytune_maintained": false,
@@ -37,6 +44,20 @@
     {
         "name": "Radio Paradise (320k)",
         "url": "http://stream-uk1.radioparadise.com/aac-320",
+        "skytune_maintained": false,
+        "location": "California",
+        "genre": "Various"
+    },
+    {
+        "name": "SomaFM Groove Salad",
+        "url": "http://ice1.somafm.com/groovesalad-256-mp3",
+        "skytune_maintained": false,
+        "location": "California",
+        "genre": "Various"
+    },
+    {
+        "name": "SonaFM Folk Forward",
+        "url": "https://somafm.com/nossl/folkfwd130.pls",
         "skytune_maintained": false,
         "location": "California",
         "genre": "Various"

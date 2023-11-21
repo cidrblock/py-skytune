@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 import re
 
 from dataclasses import dataclass
@@ -66,6 +67,11 @@ class Favorite:
     location: str
     genre: str
     uid: int = -1
+
+    def __post_init__(self: Favorite) -> None:
+        """Post init."""
+        # the skytune api may return html encoded chars
+        self.name = html.unescape(self.name)
 
     def json(self: Favorite) -> dict[str, str]:
         """Get the JSON representation."""
