@@ -31,16 +31,16 @@ class Cli:
 
         subparsers.add_parser(
             "favorites",
-            help="Search tunein for stations",
+            help="Print current favorites",
         )
 
         play = subparsers.add_parser(
             "play",
-            help="Station to search for",
+            help="Play a favorite",
         )
         play.add_argument(
             "favorite",
-            help="Favorite to play",
+            help="ID of favorite to play",
             nargs="?",
         )
 
