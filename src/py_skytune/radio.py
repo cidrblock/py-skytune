@@ -12,7 +12,7 @@ import requests
 
 from pyradios import RadioBrowser
 
-from .data import US_STATES, COUNTRY_MAP
+from .data import COUNTRY_MAP, US_STATES
 from .favorites import RE_CHANNEL, RE_FAV, FavDetails, Favorite
 from .genre import Genre, Genres, SubGenre
 from .locations import Country, Locations, Region, StateProvince
