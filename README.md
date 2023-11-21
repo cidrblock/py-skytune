@@ -42,6 +42,13 @@ $ skytune favorites
 $ skytune play 1
 ```
 
+## UI
+
+```
+$ skytune
+```
+
+<img loading="lazy" width="300px" src="./docs/screenshot.png" alt="screenshot" />
 
 
 

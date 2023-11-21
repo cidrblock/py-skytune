@@ -1,1 +1,1 @@
-"""The py_skytune package"""
+"""The py_skytune package."""

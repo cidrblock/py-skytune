@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 
 from py_skytune.radio import Radio
+from py_skytune.ui import Ui
 
 
 class Cli:
@@ -26,7 +27,6 @@ class Cli:
             title="Commands",
             dest="subcommand",
             metavar="",
-            required=True,
         )
 
         subparsers.add_parser(
@@ -48,6 +48,9 @@ class Cli:
 
     def run(self: Cli) -> None:
         """Run the CLI."""
+        if not self._args.subcommand:
+            ui = Ui()
+            ui.run()
         if self._args.subcommand == "favorites":
             favorites = self._radio.favorites
             for fav in favorites:
