@@ -1,3 +1,6 @@
+# ruff: noqa: T201
+
+"""Round trip mgmt of favorites."""
 import logging
 
 from pathlib import Path
@@ -7,8 +10,7 @@ from py_skytune.radio import Radio
 
 logging.basicConfig(level=logging.DEBUG)
 
-radio = Radio(ip_address="192.168.1.9")
-
+radio = Radio()
 radio.delete_all_favorites()
 
 stations = [

@@ -32,6 +32,8 @@ classifiers = [
 ]
 dynamic = ["dependencies", "optional-dependencies", "version"]
 
+[project.scripts]
+skytune = "py_skytune.cli:main"
 
 [tool.setuptools.dynamic]
 optional-dependencies.dev = { file = [".config/requirements-dev.txt"] }

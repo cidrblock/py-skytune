@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import json
 import logging
+import os
 
 from pathlib import Path
 
@@ -24,13 +25,21 @@ logger = logging.getLogger(__name__)
 class Radio:
     """The Radio class."""
 
-    def __init__(self: Radio, ip_address: str) -> None:
+    def __init__(self: Radio, ip_address: str | None = None) -> None:
         """Initialize the Radio class.
 
         Args:
             ip_address: The IP address of the radio.
         """
-        self.ip_address = ip_address
+        if ip_address is None:
+            try:
+                self.ip_address = os.environ.get("SKYTUNE_IP_ADDRESS")
+                logger.debug("Using SKYTUNE_IP_ADDRESS: %s", self.ip_address)
+            except KeyError as exc:
+                msg = "SKYTUNE_IP_ADDRESS not set"
+                raise KeyError(msg) from exc
+        else:
+            self.ip_address = ip_address
         self.session = requests.Session()
         self.base_url = f"http://{self.ip_address}/"
         self._favorites: list[Favorite] | None = None
@@ -164,7 +173,7 @@ class Radio:
             if genre[1] == -1:
                 logger.debug("Found genre: %s", genre[2])
                 self._genres.genres.append(
-                    Genre(name=genre[2], uid=tuple(genre[0:2]), subgenres=[])
+                    Genre(name=genre[2], uid=tuple(genre[0:2]), subgenres=[]),
                 )
             elif genre[1] != -1:
                 logger.debug("Found subgenre: %s", genre[2])
