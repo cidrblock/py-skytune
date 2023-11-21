@@ -33,11 +33,14 @@ for fav in sorted_favorites:
 ```
 $ export SKYTUNE_IP_ADDRESS="192.168.1.9"
 $ skytune favorites
+
 1 1.FM - Absolute Country Hits Radio Switzerland Various http://strm112.1.fm/acountry_mobile_mp3
 2 1.FM Always Christmas Switzerland Holiday & Seasonal https://strm112.1.fm/christmas_mobile_mp3
 3 BBC World Service United Kingdom Various http://stream.live.vc.bbcmedia.co.uk/bbc_world_service
 4 Classical KING FM United States Various https://classicalking.streamguys1.com/king-fm-aac-128k
+
 $ skytune play 1
+```
 
 
 
