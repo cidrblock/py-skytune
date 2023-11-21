@@ -1,6 +1,6 @@
 # py-skytune
 
-Python API and CLI for skytune radios
+Python API, CLI and UI for skytune radios
 
 # Quick start
 
