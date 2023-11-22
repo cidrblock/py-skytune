@@ -31,22 +31,22 @@ for station in stations:
     print(fav.uid, fav.name, fav.location, fav.genre, fav.url)
 
 radio.add_favorite(
-    name = "1.FM Always Christmas",
-    url = "https://strm112.1.fm/christmas_mobile_mp3",
-    location = "Switzerland",
-    genre = "Holiday & Seasonal",
+    name="1.FM Always Christmas",
+    url="https://strm112.1.fm/christmas_mobile_mp3",
+    location="Switzerland",
+    genre="Holiday & Seasonal",
 )
 
 radio.add_favorite(
-    name = "WALM Christmas Vinyl",
-    url = "http://icecast.walmradio.com:8000/christmas",
+    name="WALM Christmas Vinyl",
+    url="http://icecast.walmradio.com:8000/christmas",
     location="New York",
     genre="Holiday & Seasonal",
 )
 
 radio.add_favorite(
-    name= "SonaFM Folk Forward",
-    url = "https://somafm.com/nossl/folkfwd130.pls",
+    name="SonaFM Folk Forward",
+    url="https://somafm.com/nossl/folkfwd130.pls",
     location="California",
     genre="Various",
 )

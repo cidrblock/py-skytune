@@ -23,14 +23,15 @@ class Ui:
     def _setup_ui(self: Ui) -> None:
         """Set up the UI."""
         self._root = tk.Tk(className="py-skytune")
-        icon = tk.PhotoImage(file=Path(__file__).parent / "data" /"icon.png")
-        self._root.tk.call("wm", "iconphoto", self._root._w, icon) # noqa: SLF001
+        icon = tk.PhotoImage(file=Path(__file__).parent / "data" / "icon.png")
+        self._root.tk.call("wm", "iconphoto", self._root._w, icon)  # noqa: SLF001
         self._root.title(f"Skytune radio favorites ({self._radio.ip_address})")
+        columns = ("name", "genre", "location")
 
         tk.Grid.rowconfigure(self._root, index=0, weight=1)
         tk.Grid.columnconfigure(self._root, index=0, weight=1)
 
-        self._tree = ttk.Treeview(self._root, columns=["Favorites"], show="headings")
+        self._tree = ttk.Treeview(self._root, columns=columns, show="headings")
         self._tree.grid(row=0, column=0, sticky="nsew")
         self._tree.bind("<Button-3>", self._context_menu)
         self._tree.bind("<Double-Button-1>", self._play)
@@ -49,28 +50,27 @@ class Ui:
         vsb.grid(column=4, row=0, sticky="ns")
         hsb.grid(column=0, row=1, sticky="ew", columnspan=3)
 
-
         self._tree.heading(0, text="Favorites", command=lambda c=0: self._col_sort(c, 0))
 
         favorites = self._radio.favorites
-
-        max_width = max(
-            [
-                font.Font().measure(favorite.name)
-                for favorite in favorites
-            ]
-            + [font.Font().measure("Favorites")],
-        )
-        self._tree.column(0, width=max_width, stretch=True)
+        for column in columns:
+            max_width = max(
+                [font.Font().measure(favorite.name) for favorite in favorites]
+                + [font.Font().measure(getattr(favorite, column)) for favorite in favorites],
+            )
+            self._tree.heading(
+                column, text=column.capitalize(), command=lambda c=column: self._col_sort(c, 0)
+            )
+            self._tree.column(column, width=max_width, stretch=True)
 
         for favorite in favorites:
             values = [
                 favorite.name,
+                favorite.genre,
+                self._radio.locations.find_by_name(favorite.location),
             ]
             self._tree.insert("", "end", values=values, tags=(favorite.uid,))
         self._now_playing()
-
-
 
     def _col_sort(self: Ui, col: str, descending: int) -> None:
         """Sort the treeview by the given column.
@@ -79,6 +79,7 @@ class Ui:
             col: The column to sort by.
             descending: Whether to sort in descending order.
         """
+        carats = {0: "▲", 1: "▼"}
         data = [(self._tree.set(child, col), child) for child in self._tree.get_children("")]
 
         if col == "bit_rate":
@@ -87,7 +88,19 @@ class Ui:
         data.sort(reverse=descending)
         for ix, item in enumerate(data):
             self._tree.move(item[1], "", ix)
-        self._tree.heading(col, command=lambda col=col: self._col_sort(col, int(not descending)))
+
+        for column in self._tree["columns"]:
+            if column != col:
+                self._tree.heading(
+                    column,
+                    text=column.capitalize(),
+                    command=lambda col=column: self._col_sort(col, 0),
+                )
+
+        new_text = f"{col.capitalize()} {carats[descending]}"
+        self._tree.heading(
+            col, text=new_text, command=lambda col=col: self._col_sort(col, int(not descending))
+        )
 
     def _context_menu(self: Ui, event: tk.Event) -> None:
         """Provide a cotnext menu for the treeview.
@@ -104,7 +117,7 @@ class Ui:
             finally:
                 self._root.grab_release()
 
-    def _tree_motion(self:Ui, event: tk.Event) -> None:
+    def _tree_motion(self: Ui, event: tk.Event) -> None:
         """Highlight the row the mouse is over.
 
         Args:
@@ -125,11 +138,11 @@ class Ui:
         """Show the now playing."""
         playing = self._radio.playing
         status = playing["chStatus"].split(": ")[1].capitalize()
-        self._root.children["now_playing"].config(text=f"{status}: {playing["name"]}")
-        self._root.after(3000,self._now_playing)
+        self._root.children["now_playing"].config(text=f"{status}: {playing['name']}")
+        self._root.after(3000, self._now_playing)
 
     def run(self: Ui) -> None:
         """Run the UI."""
-        self._root.after(3000,self._now_playing)
-        self._root.geometry("640x480")
+        self._root.after(3000, self._now_playing)
+        self._root.minsize(640, 480)
         self._root.mainloop()

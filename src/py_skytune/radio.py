@@ -276,13 +276,13 @@ class Radio:
             except ValueError:
                 try:
                     state = next(
-                    (
-                        name
-                        for name, abbr in US_STATES.items()
-                        if station["state"].split()[1].lower() == abbr.lower()
-                    ),
-                    None,
-                )
+                        (
+                            name
+                            for name, abbr in US_STATES.items()
+                            if station["state"].split()[1].lower() == abbr.lower()
+                        ),
+                        None,
+                    )
                     location = self.locations.find_by_name(state)
                 except (ValueError, IndexError):
                     with contextlib.suppress(ValueError):
