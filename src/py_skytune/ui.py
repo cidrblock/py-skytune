@@ -18,6 +18,7 @@ class Ui:
         self._root: tk.Tk
         self._tree: ttk.Treeview
         self._radio: Radio = Radio()
+        self._columns = ("name", "genre", "location")
         self._setup_ui()
 
     def _setup_ui(self: Ui) -> None:
@@ -26,13 +27,27 @@ class Ui:
         icon = tk.PhotoImage(file=Path(__file__).parent / "data" / "icon.png")
         self._root.tk.call("wm", "iconphoto", self._root._w, icon)  # noqa: SLF001
         self._root.title(f"Skytune radio favorites ({self._radio.ip_address})")
-        columns = ("name", "genre", "location")
+
+        self._root.grid_rowconfigure(0, weight=0)
+        self._root.grid_rowconfigure(1, weight=1000)
+        self._root.grid_columnconfigure(0, weight=1)
+        self._root.grid_columnconfigure(1, weight=1)
+        self._root.grid_columnconfigure(2, weight=1)
 
         tk.Grid.rowconfigure(self._root, index=0, weight=1)
         tk.Grid.columnconfigure(self._root, index=0, weight=1)
 
-        self._tree = ttk.Treeview(self._root, columns=columns, show="headings")
-        self._tree.grid(row=0, column=0, sticky="nsew")
+        add_label = ttk.Label(self._root, text="RadioBrowser station UUID:")
+        add_label.grid(row=0, column=0, padx=(10, 0), pady=(10, 10), sticky="e")
+        add_box = ttk.Entry(self._root, name="add_box")
+        add_box.bind("<Return>", self._add)
+        add_box.grid(row=0, column=1, padx=(10, 10), pady=(10, 10), sticky="we")
+        add_btn = ttk.Button(self._root, text="Add", name="add_btn")
+        add_btn.bind("<Button-1>", self._add)
+        add_btn.grid(row=0, column=2, padx=(0, 10), pady=(10, 10), sticky="w")
+
+        self._tree = ttk.Treeview(self._root, columns=self._columns, show="headings")
+        self._tree.grid(row=1, column=0, columnspan=3, sticky="nsew")
         self._tree.bind("<Button-3>", self._context_menu)
         self._tree.bind("<Double-Button-1>", self._play)
 
@@ -42,18 +57,24 @@ class Ui:
         self._tree.bind("<Motion>", self._tree_motion)
 
         now_playing_label = ttk.Label(self._root, text="", name="now_playing")
-        now_playing_label.grid(row=2, column=0, padx=(5, 0), pady=(5, 5), sticky="w")
+        now_playing_label.grid(row=3, column=0, columnspan=4, padx=(5, 0), pady=(5, 5), sticky="w")
 
         self._menu = tk.Menu(self._tree, tearoff=0)
         self._menu.add_command(label="Play", command=self._play)
+        self._menu.add_command(label="Delete", command=self._delete)
+        self._menu.add_separator()
 
-        vsb.grid(column=4, row=0, sticky="ns")
-        hsb.grid(column=0, row=1, sticky="ew", columnspan=3)
+        vsb.grid(column=4, row=1, sticky="ns")
+        hsb.grid(column=0, row=2, sticky="ew", columnspan=3)
 
         self._tree.heading(0, text="Favorites", command=lambda c=0: self._col_sort(c, 0))
+        self._render_favorites()
 
+    def _render_favorites(self: Ui) -> None:
+        """Add the favorites to the treeview."""
+        self._tree.delete(*self._tree.get_children())
         favorites = self._radio.favorites
-        for column in columns:
+        for column in self._columns:
             max_width = max(
                 [font.Font().measure(favorite.name) for favorite in favorites]
                 + [font.Font().measure(getattr(favorite, column)) for favorite in favorites],
@@ -71,6 +92,24 @@ class Ui:
             ]
             self._tree.insert("", "end", values=values, tags=(favorite.uid,))
         self._now_playing()
+
+    def _add(self: Ui, event: tk.Event | None = None) -> str:
+        """Add a favorite from radio browser.
+
+        Args:
+            event: The event that triggered the addition.
+        """
+        add_btn = event.widget.master.children["add_btn"]
+        add_box = event.widget.master.children["add_box"]
+        add_btn.configure(state="disabled", text="Adding...")
+        self._root.update()
+        uuid = add_box.get()
+        self._radio.add_by_rb_uuid(uuid)
+        self._render_favorites()
+        add_box.delete(0, "end")
+        add_btn.configure(state="normal", text="Add")
+        self._root.update()
+        return "break"
 
     def _col_sort(self: Ui, col: str, descending: int) -> None:
         """Sort the treeview by the given column.
@@ -116,6 +155,19 @@ class Ui:
                 self._menu.tk_popup(event.x_root, event.y_root, 0)
             finally:
                 self._root.grab_release()
+
+    def _delete(self: Ui) -> None:
+        """Delete the selected favorite."""
+        input_id = self._tree.selection()
+        item_id = self._tree.item(input_id, "tag")[0]
+        self._root.after_cancel(self._now_playing)
+        self._root.children["now_playing"].config(
+            text=f"Deleting: {self._tree.item(input_id, 'values')[0]}"
+        )
+        self._root.update()
+        self._radio.delete_favorite(int(item_id))
+        self._render_favorites()
+        self._now_playing()
 
     def _tree_motion(self: Ui, event: tk.Event) -> None:
         """Highlight the row the mouse is over.

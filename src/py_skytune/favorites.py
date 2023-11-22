@@ -72,6 +72,7 @@ class Favorite:
         """Post init."""
         # the skytune api may return html encoded chars
         self.name = html.unescape(self.name)
+        self.url = html.unescape(self.url)
 
     def json(self: Favorite) -> dict[str, str]:
         """Get the JSON representation."""
