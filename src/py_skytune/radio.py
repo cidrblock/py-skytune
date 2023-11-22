@@ -6,6 +6,7 @@ import contextlib
 import json
 import logging
 import os
+import sys
 
 from pathlib import Path
 
@@ -52,9 +53,13 @@ class Radio:
         """Get the URL."""
         try:
             res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
-        except requests.exceptions.ReadTimeout:
+        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError):
             logger.exception("Timeout getting %s, retrying", url)
-            res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+            try:
+                res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+            except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError):
+                logger.exception("Timeout getting %s, giving up", url)
+                sys.exit(1)
         return res
 
     def _post(self: Radio, url: str, data: dict, params: dict) -> requests.Response:

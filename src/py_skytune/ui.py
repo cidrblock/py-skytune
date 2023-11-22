@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import tkinter as tk
 
+from pathlib import Path
 from tkinter import font, ttk
 
 from py_skytune.radio import Radio
@@ -21,7 +22,9 @@ class Ui:
 
     def _setup_ui(self: Ui) -> None:
         """Set up the UI."""
-        self._root = tk.Tk()
+        self._root = tk.Tk(className="py-skytune")
+        icon = tk.PhotoImage(file=Path(__file__).parent / "data" /"icon.png")
+        self._root.tk.call("wm", "iconphoto", self._root._w, icon) # noqa: SLF001
         self._root.title(f"Skytune radio favorites ({self._radio.ip_address})")
 
         tk.Grid.rowconfigure(self._root, index=0, weight=1)
