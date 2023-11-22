@@ -56,13 +56,14 @@ class Ui:
         self._tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         self._tree.bind("<Motion>", self._tree_motion)
 
-        now_playing_label = ttk.Label(self._root, text="", name="now_playing")
-        now_playing_label.grid(row=3, column=0, columnspan=4, padx=(5, 0), pady=(5, 5), sticky="w")
+        status_label = ttk.Label(self._root, text="", name="status")
+        status_label.grid(row=3, column=0, columnspan=4, padx=(5, 0), pady=(5, 5), sticky="w")
 
         self._menu = tk.Menu(self._tree, tearoff=0)
         self._menu.add_command(label="Play", command=self._play)
         self._menu.add_command(label="Delete", command=self._delete)
         self._menu.add_separator()
+        self._menu.add_command(label="Sort favorites on radio", command=self._sort)
 
         vsb.grid(column=4, row=1, sticky="ns")
         hsb.grid(column=0, row=2, sticky="ew", columnspan=3)
@@ -80,7 +81,9 @@ class Ui:
                 + [font.Font().measure(getattr(favorite, column)) for favorite in favorites],
             )
             self._tree.heading(
-                column, text=column.capitalize(), command=lambda c=column: self._col_sort(c, 0)
+                column,
+                text=column.capitalize(),
+                command=lambda c=column: self._col_sort(c, 0),
             )
             self._tree.column(column, width=max_width, stretch=True)
 
@@ -138,7 +141,9 @@ class Ui:
 
         new_text = f"{col.capitalize()} {carats[descending]}"
         self._tree.heading(
-            col, text=new_text, command=lambda col=col: self._col_sort(col, int(not descending))
+            col,
+            text=new_text,
+            command=lambda col=col: self._col_sort(col, int(not descending)),
         )
 
     def _context_menu(self: Ui, event: tk.Event) -> None:
@@ -160,12 +165,30 @@ class Ui:
         """Delete the selected favorite."""
         input_id = self._tree.selection()
         item_id = self._tree.item(input_id, "tag")[0]
-        self._root.after_cancel(self._now_playing)
-        self._root.children["now_playing"].config(
-            text=f"Deleting: {self._tree.item(input_id, 'values')[0]}"
-        )
-        self._root.update()
+        status = f"Deleting: {self._tree.item(input_id, 'values')[0]}"
+        self.update_status(status=status)
         self._radio.delete_favorite(int(item_id))
+        self._render_favorites()
+        self._now_playing()
+
+    def _now_playing(self: Ui) -> None:
+        """Show the now playing."""
+        playing = self._radio.playing
+        status = playing["chStatus"].split(": ")[1].capitalize()
+        self.update_status(status=f"{status}: {playing['name']}")
+        self._root.after(3000, self._now_playing)
+
+    def _play(self: Ui, event: tk.Event | None = None) -> None:
+        """Play the selected favorite."""
+        input_id = self._tree.selection()
+        item_id = self._tree.item(input_id, "tag")[0]
+        self._radio.play_favorite(int(item_id))
+        self._now_playing()
+
+    def _sort(self: Ui, event: tk.Event | None = None) -> None:
+        """Sort the favorites on the radio."""
+        self._radio.sort_favorites(callback=self.update_status)
+        self.update_status(status="Sorted")
         self._render_favorites()
         self._now_playing()
 
@@ -179,19 +202,15 @@ class Ui:
 
         self._tree.selection_set(row)
 
-    def _play(self: Ui, event: tk.Event | None = None) -> None:
-        """Play the selected favorite."""
-        input_id = self._tree.selection()
-        item_id = self._tree.item(input_id, "tag")[0]
-        self._radio.play_favorite(int(item_id))
-        self._now_playing()
+    def update_status(self: Ui, status: str) -> None:
+        """Update the status label.
 
-    def _now_playing(self: Ui) -> None:
-        """Show the now playing."""
-        playing = self._radio.playing
-        status = playing["chStatus"].split(": ")[1].capitalize()
-        self._root.children["now_playing"].config(text=f"{status}: {playing['name']}")
-        self._root.after(3000, self._now_playing)
+        Args:
+            status: The status to display.
+        """
+        self._root.after_cancel(self._now_playing)
+        self._root.children["status"].config(text=status)
+        self._root.update()
 
     def run(self: Ui) -> None:
         """Run the UI."""

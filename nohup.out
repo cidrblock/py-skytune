@@ -1,0 +1,478 @@
+Timeout getting php/favList.php, retrying
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 203, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 395, in request
+    self.endheaders()
+  File "/usr/lib64/python3.12/http/client.py", line 1314, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib64/python3.12/http/client.py", line 1074, in _send_output
+    self.send(msg)
+  File "/usr/lib64/python3.12/http/client.py", line 1018, in send
+    self.connect()
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 243, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 210, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: <urllib3.connection.HTTPConnection object at 0x7f862c9aaae0>: Failed to resolve 'none' ([Errno -2] Name or service not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f862c9aaae0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/src/py_skytune/radio.py", line 55, in _get
+    res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f862c9aaae0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+Timeout getting php/favList.php, giving up
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 203, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 395, in request
+    self.endheaders()
+  File "/usr/lib64/python3.12/http/client.py", line 1314, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib64/python3.12/http/client.py", line 1074, in _send_output
+    self.send(msg)
+  File "/usr/lib64/python3.12/http/client.py", line 1018, in send
+    self.connect()
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 243, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 210, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: <urllib3.connection.HTTPConnection object at 0x7f862c9aaae0>: Failed to resolve 'none' ([Errno -2] Name or service not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f862c9aaae0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/src/py_skytune/radio.py", line 55, in _get
+    res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f862c9aaae0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 203, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 395, in request
+    self.endheaders()
+  File "/usr/lib64/python3.12/http/client.py", line 1314, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib64/python3.12/http/client.py", line 1074, in _send_output
+    self.send(msg)
+  File "/usr/lib64/python3.12/http/client.py", line 1018, in send
+    self.connect()
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 243, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 210, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: <urllib3.connection.HTTPConnection object at 0x7f862bc39b20>: Failed to resolve 'none' ([Errno -2] Name or service not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f862bc39b20>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/src/py_skytune/radio.py", line 59, in _get
+    res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f862bc39b20>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+Timeout getting php/favList.php, retrying
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 203, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 395, in request
+    self.endheaders()
+  File "/usr/lib64/python3.12/http/client.py", line 1314, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib64/python3.12/http/client.py", line 1074, in _send_output
+    self.send(msg)
+  File "/usr/lib64/python3.12/http/client.py", line 1018, in send
+    self.connect()
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 243, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 210, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: <urllib3.connection.HTTPConnection object at 0x7f1e399227b0>: Failed to resolve 'none' ([Errno -2] Name or service not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1e399227b0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/src/py_skytune/radio.py", line 55, in _get
+    res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1e399227b0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+Timeout getting php/favList.php, giving up
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 203, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 395, in request
+    self.endheaders()
+  File "/usr/lib64/python3.12/http/client.py", line 1314, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib64/python3.12/http/client.py", line 1074, in _send_output
+    self.send(msg)
+  File "/usr/lib64/python3.12/http/client.py", line 1018, in send
+    self.connect()
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 243, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 210, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: <urllib3.connection.HTTPConnection object at 0x7f1e399227b0>: Failed to resolve 'none' ([Errno -2] Name or service not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1e399227b0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/src/py_skytune/radio.py", line 55, in _get
+    res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1e399227b0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 203, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 395, in request
+    self.endheaders()
+  File "/usr/lib64/python3.12/http/client.py", line 1314, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib64/python3.12/http/client.py", line 1074, in _send_output
+    self.send(msg)
+  File "/usr/lib64/python3.12/http/client.py", line 1018, in send
+    self.connect()
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 243, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 210, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: <urllib3.connection.HTTPConnection object at 0x7f1e39921ee0>: Failed to resolve 'none' ([Errno -2] Name or service not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1e39921ee0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/src/py_skytune/radio.py", line 59, in _get
+    res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='none', port=80): Max retries exceeded with url: /php/favList.php?PG=0&EX=0 (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1e39921ee0>: Failed to resolve 'none' ([Errno -2] Name or service not known)"))
+Timeout getting php/playing.php, retrying
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 203, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 395, in request
+    self.endheaders()
+  File "/usr/lib64/python3.12/http/client.py", line 1314, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib64/python3.12/http/client.py", line 1074, in _send_output
+    self.send(msg)
+  File "/usr/lib64/python3.12/http/client.py", line 1018, in send
+    self.connect()
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 243, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connection.py", line 212, in _new_conn
+    raise ConnectTimeoutError(
+urllib3.exceptions.ConnectTimeoutError: (<urllib3.connection.HTTPConnection object at 0x7fdb8e2ca630>, 'Connection to 192.168.1.11 timed out. (connect timeout=5)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='192.168.1.11', port=80): Max retries exceeded with url: /php/playing.php (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x7fdb8e2ca630>, 'Connection to 192.168.1.11 timed out. (connect timeout=5)'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bthornto/github/py-skytune/src/py_skytune/radio.py", line 55, in _get
+    res = self.session.get(f"{self.base_url}{url}", params=params, timeout=5)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bthornto/github/py-skytune/venv/lib64/python3.12/site-packages/requests/adapters.py", line 507, in send
+    raise ConnectTimeout(e, request=request)
+requests.exceptions.ConnectTimeout: HTTPConnectionPool(host='192.168.1.11', port=80): Max retries exceeded with url: /php/playing.php (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x7fdb8e2ca630>, 'Connection to 192.168.1.11 timed out. (connect timeout=5)'))

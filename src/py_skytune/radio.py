@@ -9,6 +9,7 @@ import os
 import sys
 
 from pathlib import Path
+from typing import Callable
 
 import requests
 
@@ -34,11 +35,12 @@ class Radio:
         """
         if ip_address is None:
             try:
-                self.ip_address = os.environ.get("SKYTUNE_IP_ADDRESS")
+                self.ip_address = os.environ["SKYTUNE_IP_ADDRESS"]
                 logger.debug("Using SKYTUNE_IP_ADDRESS: %s", self.ip_address)
             except KeyError as exc:
                 msg = "SKYTUNE_IP_ADDRESS not set"
-                raise KeyError(msg) from exc
+                logger.exception(msg)
+                raise RuntimeError(msg) from exc
         else:
             self.ip_address = ip_address
         self.session = requests.Session()
@@ -376,7 +378,11 @@ class Radio:
         _res = self._get(url="doApi.cgi", params=data)
         return self.playing
 
-    def sort_favorites(self: Radio, reverse: bool = False) -> list[Favorite]:
+    def sort_favorites(
+        self: Radio,
+        reverse: bool = False,
+        callback: Callable[[str], None] | None = None,
+    ) -> list[Favorite]:
         """Sort the favorites.
 
         Args:
@@ -399,7 +405,10 @@ class Radio:
                 logger.debug("Skipping %s %s == %s", current.name, idx, current_idx)
                 idx += 1
                 continue
-            logger.debug("Moving %s to %s from %s", current.name, idx, current_idx)
+            status = f"Moving {current.name} to {idx} from {current_idx}"
+            if callback is not None:
+                callback(status)
+            logger.debug(status)
             params = {"CI": current_idx, "DI": idx, "EX": 0}
             self._post(url="moveCh.cgi", data={}, params=params)
             self._favorites.insert(idx, self._favorites.pop(current_idx))
