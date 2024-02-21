@@ -35,24 +35,7 @@ class Radio:
             ip_address: The IP address of the radio.
         """
         self.ip_address = ip_address
-        if self.ip_address is None:
-            try:
-                self.ip_address = os.environ["SKYTUNE_IP_ADDRESS"]
-                logger.debug("Using SKYTUNE_IP_ADDRESS: %s", self.ip_address)
-            except KeyError:
-                pass
-        if self.ip_address is None:
-            try:
-                self.ip_address = socket.gethostbyname("skytune")
-                logger.debug("Using DNS skytune: %s", self.ip_address)
-            except socket.gaierror:
-                pass
-
-        if self.ip_address is None:
-            msg = "SKYTUNE_IP_ADDRESS or dns skytune entry not set"
-            logger.exception(msg)
-            raise RuntimeError(msg)
-
+        self._find()
         self.session = requests.Session()
         self.base_url = f"http://{self.ip_address}/"
         self._favorites: list[Favorite] | None = None
@@ -60,6 +43,54 @@ class Radio:
         self._genres: Genres = Genres(genres=[])
         self._locations: Locations = Locations(regions=[])
         self._rb: RadioBrowser | None = None
+
+    def _find(self: Radio) -> None:
+        """Find a radio."""
+        if self.ip_address:
+            return
+
+        try:
+            self.ip_address = os.environ["SKYTUNE_IP_ADDRESS"]
+            logger.debug("Using SKYTUNE_IP_ADDRESS: %s", self.ip_address)
+        except KeyError:
+            pass
+        else:
+            return
+
+        try:
+            self.ip_address = socket.gethostbyname("skytune")
+            logger.debug("Using DNS skytune: %s", self.ip_address)
+        except socket.gaierror:
+            pass
+        else:
+            return
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(1.0)
+        message = (
+            "M-SEARCH * HTTP/1.1\r\n"
+            "HOST:239.255.255.250:1900\r\n"
+            "ST:urn:schemas-upnp-org:device:InternetRadio:1\r\n"
+            "MX:10\r\n"
+            'MAN:"ssdp:discover"\r\n'
+            "\r\n"
+        )
+        s.sendto(message.encode(), ("239.255.255.250", 1900))
+        try:
+            while True:
+                _data, addr = s.recvfrom(8192)
+                self.ip_address = addr[0]
+                break
+        except socket.timeout:
+            pass
+        else:
+            return
+
+        msg = "SKYTUNE_IP_ADDRESS or dns skytune entry not set"
+        logger.exception(msg)
+        raise RuntimeError(msg)
+
+
 
     def _get(self: Radio, url: str, params: dict) -> requests.Response:
         """Get the URL."""
