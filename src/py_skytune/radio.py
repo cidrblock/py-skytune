@@ -6,6 +6,7 @@ import contextlib
 import json
 import logging
 import os
+import socket
 import sys
 
 from pathlib import Path
@@ -33,16 +34,25 @@ class Radio:
         Args:
             ip_address: The IP address of the radio.
         """
-        if ip_address is None:
+        self.ip_address = ip_address
+        if self.ip_address is None:
             try:
                 self.ip_address = os.environ["SKYTUNE_IP_ADDRESS"]
                 logger.debug("Using SKYTUNE_IP_ADDRESS: %s", self.ip_address)
-            except KeyError as exc:
-                msg = "SKYTUNE_IP_ADDRESS not set"
-                logger.exception(msg)
-                raise RuntimeError(msg) from exc
-        else:
-            self.ip_address = ip_address
+            except KeyError:
+                pass
+        if self.ip_address is None:
+            try:
+                self.ipaddress = socket.gethostbyname("skytune")
+                logger.debug("Using DNS skytune: %s", self.ip_address)
+            except socket.gaierror:
+                pass
+
+        if self.ip_address is None:
+            msg = "SKYTUNE_IP_ADDRESS or dns skytune entry not set"
+            logger.exception(msg)
+            raise RuntimeError(msg)
+
         self.session = requests.Session()
         self.base_url = f"http://{self.ip_address}/"
         self._favorites: list[Favorite] | None = None
