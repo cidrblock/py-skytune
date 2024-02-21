@@ -43,7 +43,6 @@ class Radio:
                 pass
         if self.ip_address is None:
             try:
-                breakpoint()
                 self.ip_address = socket.gethostbyname("skytune")
                 logger.debug("Using DNS skytune: %s", self.ip_address)
             except socket.gaierror:
