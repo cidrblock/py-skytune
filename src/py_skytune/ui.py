@@ -1,10 +1,11 @@
 """A simple Tkinter application for py-skytune."""
 from __future__ import annotations
 
+import sys
 import tkinter as tk
 
 from pathlib import Path
-from tkinter import font, ttk
+from tkinter import font, messagebox, ttk
 
 from py_skytune.radio import Radio
 
@@ -17,9 +18,8 @@ class Ui:
         self._menu: tk.Menu
         self._root: tk.Tk
         self._tree: ttk.Treeview
-        self._radio: Radio = Radio()
+        self._radio: Radio
         self._columns = ("name", "genre", "location")
-        self._setup_ui()
 
     def _setup_ui(self: Ui) -> None:
         """Set up the UI."""
@@ -214,6 +214,13 @@ class Ui:
 
     def run(self: Ui) -> None:
         """Run the UI."""
+        self._radio = Radio()
+        while not self._radio.find():
+            answer = messagebox.askyesno("Skytune error", "Radio not found. Try again?")
+            if not answer:
+                return
+
+        self._setup_ui()
         self._root.after(3000, self._now_playing)
         self._root.minsize(640, 480)
         self._root.mainloop()

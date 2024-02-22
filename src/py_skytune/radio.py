@@ -35,19 +35,19 @@ class Radio:
             ip_address: The IP address of the radio.
         """
         self.ip_address = ip_address
-        self._find()
         self.session = requests.Session()
-        self.base_url = f"http://{self.ip_address}/"
+        self.base_url: str
         self._favorites: list[Favorite] | None = None
         self._countries: dict[tuple[int, int, int], str] | None = None
         self._genres: Genres = Genres(genres=[])
         self._locations: Locations = Locations(regions=[])
         self._rb: RadioBrowser | None = None
 
-    def _find(self: Radio) -> None:
+    def find(self: Radio) -> bool:
         """Find a radio."""
         if self.ip_address:
-            return
+            self.base_url = f"http://{self.ip_address}/"
+            return Ture
 
         try:
             self.ip_address = os.environ["SKYTUNE_IP_ADDRESS"]
@@ -55,7 +55,8 @@ class Radio:
         except KeyError:
             pass
         else:
-            return
+            self.base_url = f"http://{self.ip_address}/"
+            return True
 
         try:
             self.ip_address = socket.gethostbyname("skytune")
@@ -63,7 +64,8 @@ class Radio:
         except socket.gaierror:
             pass
         else:
-            return
+            self.base_url = f"http://{self.ip_address}/"
+            return True
 
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.settimeout(1.0)
@@ -84,11 +86,11 @@ class Radio:
         except socket.timeout:
             pass
         else:
-            return
+            self.base_url = f"http://{self.ip_address}/"
+            return True
 
-        msg = "SKYTUNE_IP_ADDRESS or dns skytune entry not set"
-        logger.exception(msg)
-        raise RuntimeError(msg)
+        return False
+      
 
 
 
